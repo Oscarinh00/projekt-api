@@ -1,0 +1,1 @@
+W projekcie planowałem dodać całą klasę liczącą punkty każdego gracza i wyłaniającą zwycięzcę, jednakże niestety nie byłem w stanie wydobyć potrzebnych mi danych z listy "cards", czyli tego co wyświetla się po dobraniu karty. Poświęciłem sporo czasu, żeby naprawić ten problem, ale nie znalazłem rozwiązania i dlatego projekt ma ograniczoną funkcjonalność.
