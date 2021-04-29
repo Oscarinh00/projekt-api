@@ -3,11 +3,16 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import javax.swing.*;
 import java.io.IOException;
+import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Scanner;
 
 import static java.lang.Integer.parseInt;
@@ -15,6 +20,7 @@ import static java.lang.Integer.parseInt;
 public class GameService {
     private static String id;
     private static int players;
+    private static ArrayList fullCardList= new ArrayList<>();
 
     public static void Start() {
 
@@ -73,11 +79,11 @@ public class GameService {
             System.out.println("ile chcesz kart?");
             String card_count = ask.nextLine();
             int check = parseInt(card_count);
-            while (check != 2) {
 
-                System.out.println(card_count);
+            while (check != 0) {
+
                 String requestUrl = "https://deckofcardsapi.com/api/deck/" + id + "/draw/?count=" + card_count;
-
+                ArrayList cardList = new ArrayList<>();
 
                 try {
 
@@ -97,14 +103,21 @@ public class GameService {
                         scanner.close();
                         JSONParser parser = new JSONParser();
                         JSONObject data_obj = (JSONObject) parser.parse(inline);
+                        List tempList = (List) data_obj.get("cards");
+                        int size = tempList.size();
+                        int i = 0;
+                        while(i < size){
+                            cardList.add(tempList.get(i));
+                            System.out.println("twoja karta to: "+ tempList.get(i));
+                            i++;
+                        }
 
-                        System.out.println(data_obj.get("cards"));
-                        System.out.println(data_obj.get("remaining"));
-
-                        System.out.println("Co dalej? dobierasz kartę(1), czy kończysz turę(2)?");
+                        System.out.println("");
+                        System.out.println("Co dalej? dobierasz kartę(1), czy kończysz turę(0)?");
                         card_count = ask.nextLine();
                         check = parseInt(card_count);
-                        if (check == 2) {
+                        if (check == 0) {
+                            fullCardList.add(cardList);
                             tura = tura + 1;
                         }
                     }
@@ -119,5 +132,10 @@ public class GameService {
                 }
             }
         }
+        GameInfo gra = new GameInfo(players,fullCardList);
+
+        System.out.println("podsumowanie gry:");
+        System.out.println("liczba graczy: "+ gra.getPlayers());
+        System.out.println("karty graczy: "+ gra.getCards());
     }
 }
